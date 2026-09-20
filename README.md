@@ -16,10 +16,10 @@ The API evaluates incoming text and categorizes it into one of four distinct buc
 3. **Ollama** installed locally (Download from [ollama.com](https://ollama.com)).
 
 ## Getting Started
-
+```
 ### 1. Start the Local AI Model
 Before starting the Spring Boot application, ensure Ollama is running and has the required model downloaded. Open your terminal and run:
-```bash
+bash
 ollama run phi3
 # Note: You can change this to llama3.2 or any other model in application.properties
 
@@ -69,3 +69,4 @@ The service uses Spring AI’s `BeanOutputConverter<ClassificationResponse>`, wh
 Two engine-level parameters are configured in `application.properties`:
 * **`temperature: 0.0`**: Removes stochastic sampling, forcing the model to select the highest-probability tokens. This makes classification output deterministic and reproducible.
 * **`format: json`**: Enforces strict grammar-level JSON output at the Ollama engine layer, preventing conversational prefixes (such as *"Sure, here is your classification:"*) from breaking Jackson JSON parsing.
+```

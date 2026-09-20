@@ -52,20 +52,20 @@ Response:
 How AI Was Used:
 
 1. Framework Abstraction with Spring AI
-The project uses the `spring-ai-ollama-spring-boot-starter` library. Instead of manually writing HTTP client logic to interact with LLM endpoints, Spring AI provides a unified `ChatModel` interface. This abstracts the model provider—allowing seamless switching between local models (`phi3`, `llama3.2`) or cloud providers without altering core Java business logic.
+The project uses the spring-ai-ollama-spring-boot-starter library. Instead of manually writing HTTP client logic to interact with LLM endpoints, Spring AI provides a unified ChatModel interface. This abstracts the model provider—allowing seamless switching between local models (phi3, llama3.2) or cloud providers without altering core Java business logic.
 
 2. Hardened System Prompting
 To eliminate conversational replies, the text input is wrapped in a strict system prompt containing defensive rules:
     i)Persona Lockdown:Instructs the LLM that it is an automated classification engine and explicitly forbids it from answering questions or engaging in conversational banter.
-    ii) Fallback Boundaries: Explicitly directs the model to categorize non-business, conversational, or nonsensical input (e.g., *"Do I like you?"*) strictly as `OTHER`.
-    iii)Format Enforcement:Specifies the allowed category enum values and dictates that the confidence score must be returned as a percentage string (e.g., `95.0%`).
+    ii) Fallback Boundaries: Explicitly directs the model to categorize non-business, conversational, or nonsensical input (e.g., "Do I like you?") strictly as OTHER.
+    iii)Format Enforcement:Specifies the allowed category enum values and dictates that the confidence score must be returned as a percentage string (e.g., 95.0%).
 
 3.Structured Output & Type Safety :
-The service uses Spring AI’s `BeanOutputConverter<ClassificationResponse>`, which:
+The service uses Spring AI’s BeanOutputConverter<ClassificationResponse>, which:
     * Dynamically generates JSON schema requirements appended to the prompt.
-    * Deserializes the raw JSON response directly into strongly typed Java DTOs and Enums (`Category.java`).
+    * Deserializes the raw JSON response directly into strongly typed Java DTOs and Enums (Category.java).
 4.Hallucination & Drift Mitigation :
- Two engine-level parameters are configured in `application.properties`:
-    * `temperature: 0.0`: Removes stochastic sampling, forcing the model to select the highest-probability tokens. This makes classification output deterministic and reproducible.
-    * `format: json`: Enforces strict grammar-level JSON output at the Ollama engine layer, preventing conversational prefixes (such as "Sure, here is your classification:") from breaking Jackson JSON parsing.
+ Two engine-level parameters are configured in application.properties:
+    * temperature: 0.0: Removes stochastic sampling, forcing the model to select the highest-probability tokens. This makes classification output deterministic and reproducible.
+    * format: json: Enforces strict grammar-level JSON output at the Ollama engine layer, preventing conversational prefixes (such as "Sure, here is your classification:") from breaking Jackson JSON parsing.
 ```
